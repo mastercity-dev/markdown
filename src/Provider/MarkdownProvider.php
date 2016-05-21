@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sysolyatindima
- * Date: 21/05/16
- * Time: 17:24
- */
 
 namespace Mastercity\Markdown\Provider;
 
@@ -32,10 +26,10 @@ class MarkdownProvider implements ServiceProviderInterface
             return $parsedown;
         });
 
-        $app->extend('twig', function ($twig, $app) {
+        $app['twig'] = $app->share($app->extend('twig', function ($twig, $app) {
             $twig->addExtension(new Extension($app['parsedown']));
             return $twig;
-        });
+        }));
 
     }
 
