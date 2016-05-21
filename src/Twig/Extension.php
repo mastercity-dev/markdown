@@ -29,7 +29,8 @@ class Extension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('markdown', [$this, 'markdownFilter'], ['is_safe' => ['html']])
+            new \Twig_SimpleFilter('markdown', [$this, 'markdownFilter'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('parsedown', [$this, 'markdownFilter'], ['is_safe' => ['html']])
         ];
     }
 

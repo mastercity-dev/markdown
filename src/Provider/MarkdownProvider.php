@@ -10,6 +10,7 @@ namespace Mastercity\Markdown\Provider;
 
 
 use Mastercity\Markdown\Parser\Parser;
+use Mastercity\Markdown\Twig\Extension;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 
@@ -30,6 +31,12 @@ class MarkdownProvider implements ServiceProviderInterface
 
             return $parsedown;
         });
+
+        $app->extend('twig', function ($twig, $app) {
+            $twig->addExtension(new Extension($app['parsedown']));
+            return $twig;
+        });
+
     }
 
     /**
