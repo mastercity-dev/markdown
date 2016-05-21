@@ -1,0 +1,13 @@
+{
+  "name": "mastercity/markdown",
+  "description": "Markdown of mastercity",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Mastercity\\Markdown\\": "src/"
+    }
+  }
+}
