@@ -1,0 +1,46 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: sysolyatindima
+ * Date: 21/05/16
+ * Time: 17:24
+ */
+
+namespace Mastercity\Markdown\Provider;
+
+
+use Mastercity\Markdown\Parser\Parser;
+use Silex\Application;
+use Silex\ServiceProviderInterface;
+
+class MarkdownProvider implements ServiceProviderInterface
+{
+
+    /**
+     * Registers services on the given app.
+     *
+     * This method should only be used to configure services and parameters.
+     * It should not get services.
+     */
+    public function register(Application $app)
+    {
+        $app['parsedown'] = $app->share(function () {
+            $parsedown = new Parser();
+            $parsedown->setBreaksEnabled(true);
+
+            return $parsedown;
+        });
+    }
+
+    /**
+     * Bootstraps the application.
+     *
+     * This method is called after all services are registered
+     * and should be used for "dynamic" configuration (whenever
+     * a service must be requested).
+     */
+    public function boot(Application $app)
+    {
+        // TODO: Implement boot() method.
+    }
+}

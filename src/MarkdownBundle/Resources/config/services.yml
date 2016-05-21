@@ -1,0 +1,3 @@
+services:
+  mastercity.parsedown:
+    class: Mastercity\Markdown\Parser\Parser

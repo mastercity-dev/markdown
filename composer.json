@@ -4,6 +4,8 @@
   "type": "library",
   "license": "MIT",
   "require": {
+    "silex/silex": "~1.3",
+    "symfony/framework-bundle": "~2.3|~3.0"
   },
   "autoload": {
     "psr-4": {
