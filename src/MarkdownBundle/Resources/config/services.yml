@@ -1,3 +1,10 @@
 services:
   mastercity.parsedown:
     class: Mastercity\Markdown\Parser\Parser
+    calls:
+      - [setBreaksEnabled, [true]]
+  mastercity.parsedown.twig_extension:
+    class: Mastercity\Markdown\Twig\Extension
+    arguments: [@mastercity.parsedown]
+    tags:
+      - { name: twig.extension }
