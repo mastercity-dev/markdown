@@ -30,12 +30,21 @@ class Extension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('markdown', [$this, 'markdownFilter'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('parsedown', [$this, 'markdownFilter'], ['is_safe' => ['html']])
+            new \Twig_SimpleFilter('parsedown', [$this, 'markdownFilter'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('markdownNotLink', [$this, 'markdownNotLinkFilter'], ['is_safe' => ['html']])
         ];
     }
 
     public function markdownFilter($text)
     {
         return $this->parser->text($text);
+    }
+
+    public function markdownNotLinkFilter($text) {
+        $this->parser->setUrlsLinked(false);
+        $text = $this->parser->text($text);
+        $this->parser->setUrlsLinked(true);
+
+        return $text;
     }
 }
