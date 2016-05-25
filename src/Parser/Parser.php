@@ -1,6 +1,8 @@
 <?php
 namespace Mastercity\Markdown\Parser;
 
+use Mastercity\Markdown\Video;
+
 class Parser
 {
     # ~
