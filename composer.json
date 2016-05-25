@@ -1,5 +1,6 @@
 {
   "name": "mastercity/markdown",
+  "version": "1.0.0",
   "description": "Markdown of mastercity",
   "type": "library",
   "license": "MIT",

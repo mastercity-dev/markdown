@@ -287,6 +287,14 @@ class Parser
             $markup .= ' />';
         }
 
+        if(
+            ($Element['name'] == 'span') && 
+            isset($Element['attributes']['class']) && 
+            (strpos($Element['attributes']['class'], 'еmphasis') !== false)
+        ){
+            $markup = '<noindex>' . $markup . '</noindex>';
+        }
+        
         return $markup;
     }
 
