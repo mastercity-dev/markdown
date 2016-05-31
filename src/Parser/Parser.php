@@ -1,6 +1,8 @@
 <?php
 namespace Mastercity\Markdown\Parser;
 
+use Mastercity\Markdown\Video;
+
 class Parser
 {
     # ~
@@ -9,6 +11,11 @@ class Parser
 
     # ~
     private static $instances = array();
+
+    /**
+     * @var ParserResult
+     */
+    protected $retStructure;
 
     #
     # Setters
@@ -321,9 +328,6 @@ class Parser
         return $markup;
     }
 
-    #
-    # Rule
-
     private
     function lines(array $lines)
     {
@@ -470,10 +474,9 @@ class Parser
     }
 
     #
-    # Setext
+    # Rule
 
-    protected
-    function paragraph($Line)
+    protected function paragraph($Line)
     {
         $Block = array(
             'element' => array(
@@ -484,6 +487,22 @@ class Parser
         );
 
         return $Block;
+    }
+
+    #
+    # Setext
+
+    /**
+     * @param $text
+     * @return ParserResult
+     */
+    public function parseRetStructure($text)
+    {
+        $this->retStructure = new ParserResult();
+        $this->retStructure->parseText = $this->text($text);
+        $result = $this->retStructure;
+        $this->retStructure = null;
+        return $result;
     }
 
     #
@@ -1226,6 +1245,10 @@ class Parser
                 return;
             }
 
+            if ($this->retStructure !== null) {
+                $this->retStructure->issetVideo = true;
+            }
+
             return [
                 'extent' => mb_strlen($matches[0]),
                 'element' => array(
@@ -1284,6 +1307,10 @@ class Parser
         $Inline['element']['attributes'] += $Link['element']['attributes'];
 
         unset($Inline['element']['attributes']['href']);
+
+        if ($this->retStructure !== null) {
+            $this->retStructure->issetImage = true;
+        }
 
         return $Inline;
     }
