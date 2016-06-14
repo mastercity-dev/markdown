@@ -431,7 +431,7 @@ class Parser
             # ~
 
             if (isset($CurrentBlock) and !isset($CurrentBlock['type']) and !isset($CurrentBlock['interrupted'])) {
-                $CurrentBlock['element']['text'] .= "\n" . $text;
+                $CurrentBlock['element']['text'] .= $this->newLineInText($CurrentBlock['element']['text'],$text);
             } else {
                 $Blocks [] = $CurrentBlock;
 
@@ -488,7 +488,22 @@ class Parser
 
         return $Block;
     }
+    #
+    #add /n before text
+    /**
+     * @param $previousText
+     * @param $text
+     * @return string
+     */
+    public function  newLineInText($previousText,$text)
+    {
+        $mediaPattern = '/.*\!\[\]\(.*(png|jpeg|svg|gif|webp|bmp|tiff)\)$/i';
+        if (preg_match($mediaPattern,$previousText) && preg_match($mediaPattern,$text)){
+            return $text;
+        }
 
+        return '\n' . $text;
+    }
     #
     # Setext
 
