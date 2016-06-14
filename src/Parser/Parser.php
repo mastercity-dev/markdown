@@ -497,7 +497,7 @@ class Parser
      */
     public function  newLineInText($previousText,$text)
     {
-        $mediaPattern = '/.*\!\[\]\(.*(png|jpeg|svg|gif|webp|bmp|tiff)\)$/i';
+        $mediaPattern = '/.*\!\[\]\(.*\)$/i';
         if (preg_match($mediaPattern,$previousText) && preg_match($mediaPattern,$text)){
             return $text;
         }
