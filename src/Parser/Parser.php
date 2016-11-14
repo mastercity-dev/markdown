@@ -78,7 +78,23 @@ class Parser
     # Blocks
     #
     protected $specialCharacters = array(
-        '\\', '`', '*', '_', '{', '}', '[', ']', '(', ')', '>', '#', '+', '-', '.', '!', '|',
+        '\\',
+        '`',
+        '*',
+        '_',
+        '{',
+        '}',
+        '[',
+        ']',
+        '(',
+        ')',
+        '>',
+        '#',
+        '+',
+        '-',
+        '.',
+        '!',
+        '|',
     );
 
     #
@@ -93,21 +109,64 @@ class Parser
     );
     protected $regexHtmlAttribute = '[a-zA-Z_:][\w:.-]*(?:\s*=\s*(?:[^"\'=<>`\s]+|"[^"]*"|\'[^\']*\'))?';
     protected $voidElements = array(
-        'area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source',
+        'area',
+        'base',
+        'br',
+        'col',
+        'command',
+        'embed',
+        'hr',
+        'img',
+        'input',
+        'link',
+        'meta',
+        'param',
+        'source',
     );
 
     #
     # Comment
     protected $textLevelElements = array(
-        'a', 'br', 'bdo', 'abbr', 'blink', 'nextid', 'acronym', 'basefont',
-        'b', 'em', 'big', 'cite', 'small', 'spacer', 'listing',
-        'i', 'rp', 'del', 'code', 'strike', 'marquee',
-        'q', 'rt', 'ins', 'font', 'strong',
-        's', 'tt', 'sub', 'mark',
-        'u', 'xm', 'sup', 'nobr',
-        'var', 'ruby',
-        'wbr', 'span',
-        'time', 'iframe'
+        'a',
+        'br',
+        'bdo',
+        'abbr',
+        'blink',
+        'nextid',
+        'acronym',
+        'basefont',
+        'b',
+        'em',
+        'big',
+        'cite',
+        'small',
+        'spacer',
+        'listing',
+        'i',
+        'rp',
+        'del',
+        'code',
+        'strike',
+        'marquee',
+        'q',
+        'rt',
+        'ins',
+        'font',
+        'strong',
+        's',
+        'tt',
+        'sub',
+        'mark',
+        'u',
+        'xm',
+        'sup',
+        'nobr',
+        'var',
+        'ruby',
+        'wbr',
+        'span',
+        'time',
+        'iframe'
     );
 
     static function instance($name = 'default')
@@ -315,7 +374,7 @@ class Parser
 
         # remove surrounding line breaks
         $text = trim($text, "\n");
-
+        $text = preg_replace('/(!\[.*?\]\()(.+?)(\))/', "\n\n\${0}\n\n", $text);
         # split text into lines
         $lines = explode("\n", $text);
 
@@ -329,8 +388,9 @@ class Parser
     }
 
     private
-    function lines(array $lines)
-    {
+    function lines(
+        array $lines
+    ) {
         $CurrentBlock = null;
 
         foreach ($lines as $line) {
@@ -443,7 +503,9 @@ class Parser
 
         # ~
 
-        if (isset($CurrentBlock['continuable']) and method_exists($this, 'block' . $CurrentBlock['type'] . 'Complete')) {
+        if (isset($CurrentBlock['continuable']) and method_exists($this,
+                'block' . $CurrentBlock['type'] . 'Complete')
+        ) {
             $CurrentBlock = $this->{'block' . $CurrentBlock['type'] . 'Complete'}($CurrentBlock);
         }
 
@@ -781,7 +843,9 @@ class Parser
 
     protected function blockListContinue($Line, array $Block)
     {
-        if ($Block['indent'] === $Line['indent'] and preg_match('/^' . $Block['pattern'] . '(?:[ ]+(.*)|$)/', $Line['text'], $matches)) {
+        if ($Block['indent'] === $Line['indent'] and preg_match('/^' . $Block['pattern'] . '(?:[ ]+(.*)|$)/',
+                $Line['text'], $matches)
+        ) {
             if (isset($Block['interrupted'])) {
                 $Block['li']['text'] [] = '';
 
@@ -969,7 +1033,8 @@ class Parser
             return;
         }
 
-        if (preg_match('/^<' . $Block['name'] . '(?:[ ]*' . $this->regexHtmlAttribute . ')*[ ]*>/i', $Line['text'])) # open
+        if (preg_match('/^<' . $Block['name'] . '(?:[ ]*' . $this->regexHtmlAttribute . ')*[ ]*>/i',
+            $Line['text'])) # open
         {
             $Block['depth']++;
         }
@@ -1149,7 +1214,8 @@ class Parser
     {
         $marker = $Excerpt['text'][0];
 
-        if (preg_match('/^(' . $marker . '+)[ ]*(.+?)[ ]*(?<!' . $marker . ')\1(?!' . $marker . ')/s', $Excerpt['text'], $matches)) {
+        if (preg_match('/^(' . $marker . '+)[ ]*(.+?)[ ]*(?<!' . $marker . ')\1(?!' . $marker . ')/s', $Excerpt['text'],
+            $matches)) {
             $text = $matches[2];
             $text = htmlspecialchars($text, ENT_NOQUOTES, 'UTF-8');
             $text = preg_replace("/[ ]*\n/", ' ', $text);
@@ -1166,7 +1232,9 @@ class Parser
 
     protected function inlineEmailTag($Excerpt)
     {
-        if (strpos($Excerpt['text'], '>') !== false and preg_match('/^<((mailto:)?\S+?@\S+?)>/i', $Excerpt['text'], $matches)) {
+        if (strpos($Excerpt['text'], '>') !== false and preg_match('/^<((mailto:)?\S+?@\S+?)>/i', $Excerpt['text'],
+                $matches)
+        ) {
             $url = $matches[1];
 
             if (!isset($matches[2])) {
@@ -1316,8 +1384,9 @@ class Parser
     }
 
     protected
-    function inlineLink($Excerpt)
-    {
+    function inlineLink(
+        $Excerpt
+    ) {
         $Element = array(
             'name' => 'a',
             'handler' => 'line',
@@ -1370,7 +1439,8 @@ class Parser
             $Element['attributes']['title'] = $Definition['title'];
         }
 
-        $Element['attributes']['href'] = str_replace(array('&', '<'), array('&amp;', '&lt;'), $Element['attributes']['href']);
+        $Element['attributes']['href'] = str_replace(array('&', '<'), array('&amp;', '&lt;'),
+            $Element['attributes']['href']);
 
         return array(
             'extent' => $extent,
@@ -1383,8 +1453,9 @@ class Parser
 #
 
     protected
-    function inlineMarkup($Excerpt)
-    {
+    function inlineMarkup(
+        $Excerpt
+    ) {
         if ($this->markupEscaped or strpos($Excerpt['text'], '>') === false) {
             return;
         }
@@ -1403,7 +1474,9 @@ class Parser
             );
         }
 
-        if ($Excerpt['text'][1] !== ' ' and preg_match('/^<\w*(?:[ ]*' . $this->regexHtmlAttribute . ')*[ ]*\/?>/s', $Excerpt['text'], $matches)) {
+        if ($Excerpt['text'][1] !== ' ' and preg_match('/^<\w*(?:[ ]*' . $this->regexHtmlAttribute . ')*[ ]*\/?>/s',
+                $Excerpt['text'], $matches)
+        ) {
             return array(
                 'markup' => $matches[0],
                 'extent' => strlen($matches[0]),
@@ -1415,8 +1488,9 @@ class Parser
 # Read-Only
 
     protected
-    function inlineSpecialCharacter($Excerpt)
-    {
+    function inlineSpecialCharacter(
+        $Excerpt
+    ) {
         if ($Excerpt['text'][0] === '&' and !preg_match('/^&#?\w+;/', $Excerpt['text'])) {
             return array(
                 'markup' => '&amp;',
@@ -1435,8 +1509,9 @@ class Parser
     }
 
     protected
-    function inlineStrikethrough($Excerpt)
-    {
+    function inlineStrikethrough(
+        $Excerpt
+    ) {
         if (!isset($Excerpt['text'][1])) {
             return;
         }
@@ -1453,8 +1528,7 @@ class Parser
         }
     }
 
-    protected
-    function inlineUrl($Excerpt)
+    protected function inlineUrl($Excerpt)
     {
         if ($this->urlsLinked !== true or !isset($Excerpt['text'][2]) or $Excerpt['text'][2] !== '/') {
             return;
@@ -1477,10 +1551,11 @@ class Parser
         }
     }
 
-    protected
-    function inlineUrlTag($Excerpt)
+    protected function inlineUrlTag($Excerpt)
     {
-        if (strpos($Excerpt['text'], '>') !== false and preg_match('/^<(\w+:\/{2}[^ >]+)>/i', $Excerpt['text'], $matches)) {
+        if (strpos($Excerpt['text'], '>') !== false and preg_match('/^<(\w+:\/{2}[^ >]+)>/i', $Excerpt['text'],
+                $matches)
+        ) {
             $url = str_replace(array('&', '<'), array('&amp;', '&lt;'), $matches[1]);
 
             return array(
@@ -1496,8 +1571,7 @@ class Parser
         }
     }
 
-    protected
-    function elements(array $Elements)
+    protected function elements(array $Elements)
     {
         $markup = '';
 
@@ -1510,8 +1584,7 @@ class Parser
         return $markup;
     }
 
-    protected
-    function li($lines)
+    protected function li($lines)
     {
         $markup = $this->lines($lines);
 
