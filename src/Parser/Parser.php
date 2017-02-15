@@ -489,8 +489,7 @@ class Parser
             }
 
             # ~
-
-            if (isset($CurrentBlock) and !isset($CurrentBlock['type']) and !isset($CurrentBlock['interrupted'])) {
+            if (isset($CurrentBlock) and !isset($CurrentBlock['type']) and !isset($CurrentBlock['interrupted'])and !$this->betweenImages($CurrentBlock['element']['text'], $text)) {
                 $CurrentBlock['element']['text'] .= "\n" . $text;
             } else {
                 $Blocks [] = $CurrentBlock;
@@ -550,7 +549,18 @@ class Parser
 
         return $Block;
     }
-
+    #
+    #check if prev and next is images
+    /**
+     * @param $previousText
+     * @param $text
+     * @return string
+     */
+    public function  betweenImages($previousText, $text)
+    {
+        $mediaPattern = '/.*\!\[\]\(.*\)$/i';
+        return preg_match($mediaPattern, $previousText) && preg_match($mediaPattern, $text);
+    }
     #
     # Setext
 
